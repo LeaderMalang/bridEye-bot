@@ -30,8 +30,9 @@ def get_token_price(token_address):
   else :
     return result
 
-
-def check_increase_decrease_percentage(token_address):
+def buy_token(from_wallat,to_wallat,value):
+  pass
+def check_decrease_percentage(token_address):
   pass
 
 
