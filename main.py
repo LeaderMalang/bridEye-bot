@@ -3,7 +3,7 @@ import os
 import csv
 import tempfile
 import shutil
-
+from check_buy_conditions import get_current_watchers
 
 #api key for brideye
 brideye_key=os.environ.get("BRID_EYE_KEY")
@@ -51,7 +51,8 @@ def modify_price_in_csv(file_path):
     csv_writer = csv.writer(temp_file)
     line_count = 0
     for row in csv_reader:
-
+      if len(row)==0:
+        continue
       if line_count == 0:
 
         print(f'Column names are {", ".join(row)}')
@@ -64,6 +65,18 @@ def modify_price_in_csv(file_path):
         row[1]=current_price["value"]
         row[2]=current_price["updateHumanTime"]
         print("Updating Token Price ,",current_price["updateHumanTime"])
+
+        watchers_with_time_list=get_current_watchers(token_address)
+        last_watchers_count=row[3]
+        last_watchers_time=row[4]
+        if isinstance(watchers_with_time_list, list):
+
+          row[3]=watchers_with_time_list[0]
+          row[4]=watchers_with_time_list[1]
+          
+        else:
+          print("No watchers found")
+
       csv_writer.writerow(row)
 
     # Close the original file and the temporary file
