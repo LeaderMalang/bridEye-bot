@@ -1,2 +1,3 @@
-token_address,last_price,date_updated_price,previously_bought,amount_bought,date_sold,amount_sold,previously_sold
-4neSyzJmcSWQF58DKHdo7FNzJDDKSgaaQqrzuSXS5U6g,0.00028630243839475447,2024-04-19T16:38:33,,,,,,
+token_address,last_price,date_updated_price,watchers,watchers_check_ago,previously_bought,amount_bought,date_sold,amount_sold,previously_sold
+4neSyzJmcSWQF58DKHdo7FNzJDDKSgaaQqrzuSXS5U6g,0.0002863763756546652,2024-04-23T12:13:06,2,2024-04-23 17:18:57.608404,,,,,
+

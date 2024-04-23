@@ -35,7 +35,7 @@ def get_current_watchers(token_address):
     print(next_element_watchers_count)
 
     if int(next_element_watchers_count) > 0:
-        return [next_element_watchers_count,current_time]
+        return [int(next_element_watchers_count),current_time]
     else:
         return False
     

@@ -3,13 +3,15 @@ import os
 import csv
 import tempfile
 import shutil
-from check_buy_conditions import get_current_watchers
+from get_current_watchers import get_current_watchers
+from jupiter_api.jupiter_api import buy_order
+import asyncio
 
 #api key for brideye
 brideye_key=os.environ.get("BRID_EYE_KEY")
 #base url of public API endpoint
 public_api_endpoint=os.environ.get("PUBLIC_API_ENDPOINT")
-
+wallet_public_key=os.environ.get("PUBLIC_KEY")
 #function to get token price of token from address 
 def get_token_price(token_address):
   
@@ -36,12 +38,28 @@ def check_decrease_percentage(token_address):
   pass
 
 
+def calculate_percentage_increase(initial_value, updated_value):
+
+    # Calculate the increase in value
+  
+  increase = updated_value - initial_value
+    
+    # Calculate the percentage increase
+  
+  if initial_value == 0:
+        # Handle the case where the initial value is zero to avoid division by zero
+    
+    percentage_increase = float('inf')  # Infinite increase
+  else:
+    percentage_increase = (increase / initial_value) * 100
+    
+    # Return the percentage increase
+  return percentage_increase
 
 
 
 
-
-def modify_price_in_csv(file_path):
+async def modify_price_in_csv(file_path):
 
   temp_file = tempfile.NamedTemporaryFile(mode='w+', delete=False)
 
@@ -71,8 +89,16 @@ def modify_price_in_csv(file_path):
         last_watchers_time=row[4]
         if isinstance(watchers_with_time_list, list):
 
-          row[3]=watchers_with_time_list[0]
+          row[3]=int(watchers_with_time_list[0])
           row[4]=watchers_with_time_list[1]
+          if last_watchers_count is not None and last_watchers_count!= '':
+            perc_increase=calculate_percentage_increase(int(last_watchers_count),int(watchers_with_time_list[0]))
+          if perc_increase>10:
+            #place buy of 1 $ 
+            amount=.0001000
+            input_mint=os.environ.get("INPUT_MINT")
+            transaction_id=await buy_order(input_mint,token_address,amount)
+            print(f"Successfully created transaction ,{transaction_id}")
           
         else:
           print("No watchers found")
@@ -99,7 +125,8 @@ if __name__ == "__main__":
 
  
   file_path = 'crypto_tokens.csv'  # Path to the CSV file
-  modify_price_in_csv(file_path)
+  asyncio.run(modify_price_in_csv(file_path))
+  # modify_price_in_csv(file_path)
   print("Job Completed")
 
   
