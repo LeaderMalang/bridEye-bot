@@ -40,7 +40,7 @@ jupiter = Jupiter(
 OPEN LIMIT ORDER
 """
 async def buy_order(input_mint, out_mint,amount):
-  token_amount=get_account_balance(input_mint)
+  token_amount=await get_account_balance(input_mint)
   if token_amount<amount:
     print("Insufficient token balance")
     return "Insufficient token balance"
