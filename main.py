@@ -70,7 +70,11 @@ def calculate_percentage_decrease(initial_value, updated_value):
     # Return the percentage decrease
   return percentage_decrease
 
+def calculate_total_value(starting_value, nominal_value_per_viewer, number_of_viewers):
+  total_value = starting_value + (nominal_value_per_viewer * number_of_viewers)
+  return total_value
 
+  
 async def modify_price_in_csv(file_path):
   await asyncio.sleep(1)
   temp_file = tempfile.NamedTemporaryFile(mode='w+', delete=False)
@@ -124,7 +128,10 @@ async def modify_price_in_csv(file_path):
             print(f" percentage increase in watchers count, {perc_increase}")
           if perc_increase>=10 and row[6]>=10.0:
             #place buy of 1 $ 
-            amount=0.0070
+            starting_value =last_watchers_count if last_watchers_count is not None and last_watchers_count!= '' else 0
+            nominal_value_per_viewer =0.0010
+            number_of_viewers =watchers_with_time_list[0]
+            amount=calculate_total_value(starting_value, nominal_value_per_viewer, number_of_viewers)
             
             transaction_id=await create_order(input_mint,token_address,amount,'buy')
           
